@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { verifyToken } from "../utils/jwt";
 import { prisma } from "../index";
+import { verifySupabaseToken, findOrCreateUser } from "../utils/supabase-jwt";
+import { verifyToken } from "../utils/jwt";
 
 declare global {
   namespace Express {
@@ -18,6 +19,17 @@ export async function authMiddleware(req: Request, res: Response, next: NextFunc
   }
 
   const token = authHeader.split(" ")[1];
+
+  try {
+    const supabaseUser = await verifySupabaseToken(token);
+    if (supabaseUser) {
+      const dbUser = await findOrCreateUser(supabaseUser);
+      req.userId = dbUser.id;
+      req.user = { id: dbUser.id, email: dbUser.email, name: dbUser.name, role: dbUser.role };
+      return next();
+    }
+  } catch {}
+
   const decoded = verifyToken(token);
   if (!decoded) {
     return res.status(401).json({ error: "Invalid or expired token" });
