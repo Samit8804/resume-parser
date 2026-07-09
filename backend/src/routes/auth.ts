@@ -4,8 +4,15 @@ import { z } from "zod";
 import { prisma } from "../index";
 import { generateToken } from "../utils/jwt";
 import { authMiddleware } from "../middleware/auth";
+import { createClient } from "@supabase/supabase-js";
 
 const router = Router();
+
+const supabaseAdmin = createClient(
+  process.env.SUPABASE_URL || "",
+  process.env.SUPABASE_SECRET_KEY || "",
+  { auth: { autoRefreshToken: false, persistSession: false } }
+);
 
 const registerSchema = z.object({
   email: z.string().email(),
@@ -28,6 +35,18 @@ router.post("/register", async (req: Request, res: Response) => {
     }
 
     const passwordHash = await bcrypt.hash(data.password, 12);
+
+    const { error } = await supabaseAdmin.auth.admin.createUser({
+      email: data.email,
+      password: data.password,
+      email_confirm: true,
+      user_metadata: { name: data.name },
+    });
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
     const user = await prisma.user.create({
       data: { email: data.email, passwordHash, name: data.name },
     });
