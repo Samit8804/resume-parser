@@ -63,12 +63,12 @@ export default function NewJobPage() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Create New Job</h1>
+      <h1 className="font-display text-2xl mb-6">Create New Job</h1>
       <Card>
         <CardContent className="p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
-              <div className="p-3 text-sm bg-red-50 border border-red-200 text-red-700 rounded-lg">{error}</div>
+              <div className="p-3 text-sm bg-flag-coral/10 border border-flag-coral/30 text-flag-coral rounded-lg">{error}</div>
             )}
 
             <div className="grid grid-cols-2 gap-4">
@@ -111,7 +111,7 @@ export default function NewJobPage() {
               <div className="col-span-2 space-y-2">
                 <Label>Application Method</Label>
                 <select
-                  className="w-full h-10 rounded-lg border border-gray-300 px-3 text-sm bg-white"
+                  className="w-full h-10 rounded-lg bg-frost-900 border border-frost-300/20 px-3 text-sm text-paper"
                   value={form.applicationMethod}
                   onChange={(e) => setForm({ ...form, applicationMethod: e.target.value })}
                 >
@@ -123,7 +123,7 @@ export default function NewJobPage() {
               <div className="col-span-2 space-y-2">
                 <Label>Job Description</Label>
                 <textarea
-                  className="flex w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm min-h-[100px] focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex w-full rounded-lg border border-frost-300/20 bg-frost-900 px-3 py-2 text-sm text-paper placeholder:text-paper/30 min-h-[100px] focus:outline-none focus:ring-1 focus:ring-signal-amber/20"
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}
                 />
@@ -141,7 +141,7 @@ export default function NewJobPage() {
                     className="flex-1"
                   />
                   <select
-                    className="h-10 rounded-lg border border-gray-300 px-3 text-sm bg-white"
+                    className="h-10 rounded-lg bg-frost-900 border border-frost-300/20 px-3 text-sm text-paper"
                     value={skill.isRequired ? "required" : "preferred"}
                     onChange={(e) => updateSkill(i, "isRequired", e.target.value === "required")}
                   >

@@ -1,42 +1,22 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+import { ReactNode } from "react"
 
-const Card = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
-  return (
-    <div
-      ref={ref}
-      className={cn("rounded-xl border border-gray-200 bg-white shadow-sm", className)}
-      {...props}
-    />
-  )
-})
-Card.displayName = "Card"
+interface CardProps {
+  children: ReactNode
+  className?: string
+}
 
-const CardHeader = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
-  return <div ref={ref} className={cn("p-6 pb-0", className)} {...props} />
-})
-CardHeader.displayName = "CardHeader"
+export function Card({ children, className = "" }: CardProps) {
+  return <div className={`glass rounded-xl ${className}`}>{children}</div>
+}
 
-const CardTitle = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
-  return <div ref={ref} className={cn("text-xl font-semibold", className)} {...props} />
-})
-CardTitle.displayName = "CardTitle"
+export function CardHeader({ children, className = "" }: CardProps) {
+  return <div className={`p-4 border-b border-frost-300/20 ${className}`}>{children}</div>
+}
 
-const CardContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
-  return <div ref={ref} className={cn("p-6 pt-4", className)} {...props} />
-})
-CardContent.displayName = "CardContent"
+export function CardTitle({ children, className = "" }: CardProps) {
+  return <h3 className={`font-display text-lg text-paper ${className}`}>{children}</h3>
+}
 
-export { Card, CardHeader, CardTitle, CardContent }
+export function CardContent({ children, className = "" }: CardProps) {
+  return <div className={`p-4 ${className}`}>{children}</div>
+}

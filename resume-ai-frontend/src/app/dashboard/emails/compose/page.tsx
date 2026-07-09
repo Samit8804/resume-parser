@@ -93,11 +93,11 @@ Best regards,
 
   return (
     <div className="max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Compose Email</h1>
+      <h1 className="font-display text-2xl mb-6">Compose Email</h1>
       <Card>
         <CardContent className="p-6 space-y-4">
-          {error && <div className="p-3 text-sm bg-red-50 border border-red-200 text-red-700 rounded-lg">{error}</div>}
-          {success && <div className="p-3 text-sm bg-green-50 border border-green-200 text-green-700 rounded-lg">{success}</div>}
+          {error && <div className="p-3 text-sm bg-flag-coral/10 border border-flag-coral/30 text-flag-coral rounded-lg">{error}</div>}
+          {success && <div className="p-3 text-sm bg-verified-teal/10 border border-verified-teal/30 text-verified-teal rounded-lg">{success}</div>}
 
           <div className="flex gap-4">
             <Label className="flex items-center gap-2">
@@ -118,9 +118,9 @@ Best regards,
           ) : (
             <div className="space-y-1">
               <Label>Select Candidates ({selectedCandidates.length} selected)</Label>
-              <div className="max-h-40 overflow-y-auto border rounded-lg p-2 space-y-1">
+              <div className="max-h-40 overflow-y-auto border border-frost-300/20 rounded-lg p-2 space-y-1">
                 {candidates.map((c: any) => (
-                  <label key={c.id} className="flex items-center gap-2 text-sm p-1 hover:bg-gray-50 rounded cursor-pointer">
+                  <label key={c.id} className="flex items-center gap-2 text-sm p-1 hover:bg-frost-900 rounded cursor-pointer">
                     <input
                       type="checkbox"
                       checked={selectedCandidates.some((s: any) => s.id === c.id)}
@@ -140,7 +140,7 @@ Best regards,
           <div className="space-y-1">
             <Label>Template</Label>
             <select
-              className="w-full h-10 rounded-lg border border-gray-300 px-3 text-sm bg-white"
+              className="w-full h-10 rounded-lg bg-frost-900 border border-frost-300/20 px-3 text-sm text-paper"
               onChange={e => selectTemplate(e.target.value)}
               value=""
             >
@@ -159,7 +159,7 @@ Best regards,
           <div className="space-y-1">
             <Label>Body *</Label>
             <textarea
-              className="flex w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm min-h-[250px] font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex w-full rounded-lg border border-frost-300/20 bg-frost-900 px-3 py-2 text-sm text-paper placeholder:text-paper/30 min-h-[250px] font-mono focus:outline-none focus:ring-1 focus:ring-signal-amber/20"
               value={body}
               onChange={e => setBody(e.target.value)}
               placeholder="Write your email body here..."

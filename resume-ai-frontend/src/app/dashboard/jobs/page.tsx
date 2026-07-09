@@ -19,8 +19,8 @@ export default function JobsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Jobs</h1>
-          <p className="text-gray-500 mt-1">Manage your job postings</p>
+          <h1 className="font-display text-2xl">Jobs</h1>
+          <p className="text-paper/50 mt-1">Manage your job postings</p>
         </div>
         <Link href="/dashboard/jobs/new">
           <Button>Create Job</Button>
@@ -28,22 +28,22 @@ export default function JobsPage() {
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-gray-500">Loading...</div>
+        <div className="text-center py-12 text-paper/50">Loading...</div>
       ) : jobs.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
-            <p className="text-gray-500">No jobs created yet.</p>
+            <p className="text-paper/50">No jobs created yet.</p>
           </CardContent>
         </Card>
       ) : (
         <div className="grid gap-4">
           {jobs.map((job) => (
             <Link key={job.id} href={`/dashboard/jobs/${job.id}`}>
-              <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <Card className="glass-hover transition-shadow cursor-pointer">
                 <CardContent className="p-6 flex items-center justify-between">
                   <div>
                     <h3 className="font-semibold">{job.title}</h3>
-                    <p className="text-sm text-gray-500 mt-1">
+                    <p className="text-sm text-paper/50 mt-1">
                       {job.department} {job.location ? `· ${job.location}` : ""}
                     </p>
                     <div className="flex flex-wrap gap-1.5 mt-2">
@@ -53,8 +53,8 @@ export default function JobsPage() {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-bold text-blue-600">{job._count?.candidates || 0}</p>
-                    <p className="text-xs text-gray-500">{job.status}</p>
+                    <p className="font-mono text-2xl text-signal-amber">{job._count?.candidates || 0}</p>
+                    <p className="text-xs text-paper/50">{job.status}</p>
                   </div>
                 </CardContent>
               </Card>

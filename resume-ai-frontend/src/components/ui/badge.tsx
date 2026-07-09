@@ -1,25 +1,23 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+import { ReactNode } from "react"
 
-const Badge = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { variant?: "default" | "success" | "warning" | "error" | "outline" }
->(({ className, variant = "default", ...props }, ref) => {
+interface BadgeProps {
+  children: ReactNode
+  variant?: "default" | "outline" | "success" | "warning" | "error"
+  className?: string
+}
+
+export function Badge({ children, variant = "default", className = "" }: BadgeProps) {
   const variants: Record<string, string> = {
-    default: "bg-blue-100 text-blue-800",
-    success: "bg-green-100 text-green-800",
-    warning: "bg-yellow-100 text-yellow-800",
-    error: "bg-red-100 text-red-800",
-    outline: "border border-gray-300 text-gray-700",
+    default: "bg-frost-900 text-paper/80",
+    outline: "border border-frost-300/20 text-paper/60",
+    success: "bg-verified-teal/10 text-verified-teal",
+    warning: "bg-signal-amber/10 text-signal-amber",
+    error: "bg-flag-coral/10 text-flag-coral",
   }
-  return (
-    <div
-      ref={ref}
-      className={cn("inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium", variants[variant], className)}
-      {...props}
-    />
-  )
-})
-Badge.displayName = "Badge"
 
-export { Badge }
+  return (
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-mono ${variants[variant]} ${className}`}>
+      {children}
+    </span>
+  )
+}

@@ -30,7 +30,7 @@ export default function EmailsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Email Management</h1>
+        <h1 className="font-display text-2xl">Email Management</h1>
         <div className="flex gap-2">
           <Link href="/dashboard/emails/compose">
             <Button>Compose Email</Button>
@@ -38,12 +38,12 @@ export default function EmailsPage() {
         </div>
       </div>
 
-      <div className="flex gap-2 border-b">
+      <div className="flex gap-2 border-b border-frost-300/20">
         {["analytics", "history", "templates", "notifications"].map((tab) => (
           <button
             key={tab}
             className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-              activeTab === tab ? "border-blue-600 text-blue-600" : "border-transparent text-gray-500 hover:text-gray-700"
+              activeTab === tab ? "border-signal-amber text-signal-amber" : "border-transparent text-paper/50 hover:text-paper/70"
             }`}
             onClick={() => setActiveTab(tab)}
           >
@@ -54,11 +54,11 @@ export default function EmailsPage() {
 
       {activeTab === "analytics" && (
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-          <Card><CardContent className="p-4 text-center"><p className="text-2xl font-bold">{analytics?.total || 0}</p><p className="text-sm text-gray-500">Total Sent</p></CardContent></Card>
-          <Card><CardContent className="p-4 text-center"><p className="text-2xl font-bold text-green-600">{analytics?.deliveryRate || "0"}%</p><p className="text-sm text-gray-500">Delivery Rate</p></CardContent></Card>
-          <Card><CardContent className="p-4 text-center"><p className="text-2xl font-bold text-blue-600">{analytics?.openRate || "0"}%</p><p className="text-sm text-gray-500">Open Rate</p></CardContent></Card>
-          <Card><CardContent className="p-4 text-center"><p className="text-2xl font-bold text-red-600">{analytics?.failed || 0}</p><p className="text-sm text-gray-500">Failed</p></CardContent></Card>
-          <Card><CardContent className="p-4 text-center"><p className="text-2xl font-bold text-orange-600">{analytics?.scheduled || 0}</p><p className="text-sm text-gray-500">Scheduled</p></CardContent></Card>
+          <Card><CardContent className="p-4 text-center"><p className="font-display text-2xl">{analytics?.total || 0}</p><p className="text-sm text-paper/50">Total Sent</p></CardContent></Card>
+          <Card><CardContent className="p-4 text-center"><p className="font-mono text-2xl text-verified-teal">{analytics?.deliveryRate || "0"}%</p><p className="text-sm text-paper/50">Delivery Rate</p></CardContent></Card>
+          <Card><CardContent className="p-4 text-center"><p className="font-mono text-2xl text-signal-amber">{analytics?.openRate || "0"}%</p><p className="text-sm text-paper/50">Open Rate</p></CardContent></Card>
+          <Card><CardContent className="p-4 text-center"><p className="font-mono text-2xl text-flag-coral">{analytics?.failed || 0}</p><p className="text-sm text-paper/50">Failed</p></CardContent></Card>
+          <Card><CardContent className="p-4 text-center"><p className="font-mono text-2xl text-signal-amber">{analytics?.scheduled || 0}</p><p className="text-sm text-paper/50">Scheduled</p></CardContent></Card>
         </div>
       )}
 
@@ -66,21 +66,21 @@ export default function EmailsPage() {
         <Card>
           <CardContent className="p-4">
             {recentEmails.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">No emails sent yet</p>
+              <p className="text-paper/50 text-center py-8">No emails sent yet</p>
             ) : (
               <div className="space-y-2">
                 {recentEmails.map((e: any) => (
-                  <div key={e.id} className="flex items-center justify-between p-3 border rounded-lg text-sm">
+                  <div key={e.id} className="flex items-center justify-between p-3 border border-frost-300/20 rounded-lg text-sm">
                     <div className="flex-1">
                       <p className="font-medium">{e.subject}</p>
-                      <p className="text-gray-500">To: {e.recipient} {e.candidate?.name ? `(${e.candidate.name})` : ""}</p>
+                      <p className="text-paper/50">To: {e.recipient} {e.candidate?.name ? `(${e.candidate.name})` : ""}</p>
                     </div>
-                    <div className="text-right text-xs text-gray-400">
+                    <div className="text-right text-xs text-paper/30">
                       <p>{new Date(e.createdAt).toLocaleDateString()}</p>
                       <span className={`inline-block px-2 py-0.5 rounded-full ${
-                        e.status === "SENT" ? "bg-green-100 text-green-700" :
-                        e.status === "FAILED" ? "bg-red-100 text-red-700" :
-                        "bg-yellow-100 text-yellow-700"
+                        e.status === "SENT" ? "bg-verified-teal/10 text-verified-teal" :
+                        e.status === "FAILED" ? "bg-flag-coral/10 text-flag-coral" :
+                        "bg-signal-amber/10 text-signal-amber"
                       }`}>{e.status}</span>
                     </div>
                   </div>
@@ -96,7 +96,7 @@ export default function EmailsPage() {
           {templates.length === 0 && (
             <Card>
               <CardContent className="p-6 text-center space-y-3">
-                <p className="text-gray-500">No email templates yet</p>
+                <p className="text-paper/50">No email templates yet</p>
                 <Button onClick={seedTemplates} variant="outline">Load Default Templates</Button>
               </CardContent>
             </Card>
@@ -108,8 +108,8 @@ export default function EmailsPage() {
                   <div className="flex justify-between items-start">
                     <div>
                       <h3 className="font-medium">{t.name}</h3>
-                      <p className="text-sm text-gray-500">{t.subject}</p>
-                      <p className="text-xs text-gray-400 mt-1 capitalize">Category: {t.category}</p>
+                      <p className="text-sm text-paper/50">{t.subject}</p>
+                      <p className="text-xs text-paper/30 mt-1 capitalize">Category: {t.category}</p>
                     </div>
                     <Link href={`/dashboard/emails/compose?template=${t.id}`}>
                       <Button size="sm" variant="outline">Use</Button>
@@ -131,16 +131,16 @@ export default function EmailsPage() {
               </Button>
             </div>
             {notifications.length === 0 ? (
-              <p className="text-gray-500 text-center py-8">No notifications</p>
+              <p className="text-paper/50 text-center py-8">No notifications</p>
             ) : (
               <div className="space-y-2">
                 {notifications.map((n: any) => (
-                  <div key={n.id} className={`p-3 border rounded-lg text-sm ${!n.read ? "bg-blue-50 border-blue-200" : ""}`}>
+                  <div key={n.id} className={`p-3 border border-frost-300/20 rounded-lg text-sm ${!n.read ? "bg-signal-amber/10 border-signal-amber/30" : ""}`}>
                     <div className="flex justify-between items-start">
                       <div>
                         <p className="font-medium">{n.title}</p>
-                        <p className="text-gray-600">{n.message}</p>
-                        <p className="text-xs text-gray-400 mt-1">{new Date(n.createdAt).toLocaleString()}</p>
+                        <p className="text-paper/70">{n.message}</p>
+                        <p className="text-xs text-paper/30 mt-1">{new Date(n.createdAt).toLocaleString()}</p>
                       </div>
                       {!n.read && (
                         <Button size="sm" variant="ghost" onClick={async () => { await notificationApi.markRead(n.id); setNotifications(prev => prev.map(x => x.id === n.id ? {...x, read: true} : x)) }}>

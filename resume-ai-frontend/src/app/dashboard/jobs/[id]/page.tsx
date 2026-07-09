@@ -56,8 +56,8 @@ export default function JobDetailPage() {
     setSelectedCandidates(next)
   }
 
-  if (loading) return <div className="text-center py-12 text-gray-500">Loading...</div>
-  if (!job) return <div className="text-center py-12 text-gray-500">Job not found</div>
+  if (loading) return <div className="text-center py-12 text-paper/50">Loading...</div>
+  if (!job) return <div className="text-center py-12 text-paper/50">Job not found</div>
 
   const candidates = (job.candidates || []).filter((c: any) => {
     if (search && !c.name.toLowerCase().includes(search.toLowerCase()) && !c.email?.toLowerCase().includes(search.toLowerCase())) return false
@@ -69,9 +69,9 @@ export default function JobDetailPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <Link href="/dashboard" className="text-sm text-blue-600 hover:underline mb-2 inline-block">&larr; Back</Link>
-          <h1 className="text-2xl font-bold">{job.title}</h1>
-          <p className="text-gray-500 mt-1">
+          <Link href="/dashboard" className="text-sm text-signal-amber hover:underline mb-2 inline-block">&larr; Back</Link>
+          <h1 className="font-display text-2xl">{job.title}</h1>
+          <p className="text-paper/50 mt-1">
             {[job.department, job.location, job.type].filter(Boolean).join(" · ")}
           </p>
         </div>
@@ -97,14 +97,14 @@ export default function JobDetailPage() {
         </div>
       </div>
 
-      {uploadError && <div className="p-3 text-sm bg-red-50 border border-red-200 text-red-700 rounded-lg">{uploadError}</div>}
+      {uploadError && <div className="p-3 text-sm bg-flag-coral/10 border border-flag-coral/30 text-flag-coral rounded-lg">{uploadError}</div>}
 
       {(job.applicationMethod === "PUBLIC_LINK" || job.applicationMethod === "BOTH") && job.slug && (
-        <Card className="border-blue-200 bg-blue-50">
+        <Card className="border-signal-amber/30 bg-signal-amber/10">
           <CardContent className="p-4">
             <p className="text-sm font-medium mb-1">Public Application Link</p>
             <div className="flex items-center gap-2">
-              <code className="text-sm bg-white px-3 py-1.5 rounded border flex-1">
+              <code className="text-sm bg-frost-900 px-3 py-1.5 rounded border border-frost-300/20 flex-1">
                 {typeof window !== "undefined" ? `${window.location.origin}/jobs/${job.slug}` : `/jobs/${job.slug}`}
               </code>
               <Button size="sm" variant="outline" onClick={() => {
@@ -134,20 +134,20 @@ export default function JobDetailPage() {
       {insights && candidates.length > 0 && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <Card><CardContent className="p-4 text-center">
-            <p className="text-2xl font-bold text-blue-600">{insights.totalCandidates}</p>
-            <p className="text-xs text-gray-500">Total Candidates</p>
+            <p className="font-mono text-2xl text-signal-amber">{insights.totalCandidates}</p>
+            <p className="text-xs text-paper/50">Total Candidates</p>
           </CardContent></Card>
           <Card><CardContent className="p-4 text-center">
-            <p className="text-2xl font-bold text-blue-600">{insights.avgMatchScore}%</p>
-            <p className="text-xs text-gray-500">Avg Match Score</p>
+            <p className="font-mono text-2xl text-signal-amber">{insights.avgMatchScore}%</p>
+            <p className="text-xs text-paper/50">Avg Match Score</p>
           </CardContent></Card>
           <Card><CardContent className="p-4 text-center">
-            <p className="text-2xl font-bold text-blue-600">{insights.avgExperience}y</p>
-            <p className="text-xs text-gray-500">Avg Experience</p>
+            <p className="font-mono text-2xl text-signal-amber">{insights.avgExperience}y</p>
+            <p className="text-xs text-paper/50">Avg Experience</p>
           </CardContent></Card>
           <Card><CardContent className="p-4 text-center">
-            <p className="text-2xl font-bold text-blue-600">{insights.mostCommonSkill || "N/A"}</p>
-            <p className="text-xs text-gray-500">Most Common Skill</p>
+            <p className="font-mono text-2xl text-signal-amber">{insights.mostCommonSkill || "N/A"}</p>
+            <p className="text-xs text-paper/50">Most Common Skill</p>
           </CardContent></Card>
         </div>
       )}
@@ -160,10 +160,10 @@ export default function JobDetailPage() {
               {insights.missingSkillAnalysis.map((s: any) => (
                 <div key={s.name} className="flex items-center gap-3">
                   <span className="text-sm w-32 font-medium">{s.name}</span>
-                  <div className="flex-1 bg-gray-200 rounded-full h-2.5">
-                    <div className={`h-2.5 rounded-full ${s.missingPercent > 50 ? "bg-red-500" : s.missingPercent > 20 ? "bg-yellow-500" : "bg-green-500"}`} style={{ width: `${s.missingPercent}%` }} />
+                  <div className="flex-1 bg-frost-900 rounded-full h-2.5">
+                    <div className={`h-2.5 rounded-full ${s.missingPercent > 50 ? "bg-flag-coral" : s.missingPercent > 20 ? "bg-signal-amber" : "bg-verified-teal"}`} style={{ width: `${s.missingPercent}%` }} />
                   </div>
-                  <span className="text-xs text-gray-500 w-20 text-right">{s.missingCount} missing ({s.missingPercent}%)</span>
+                  <span className="font-mono text-xs text-paper/50 w-20 text-right">{s.missingCount} missing ({s.missingPercent}%)</span>
                 </div>
               ))}
             </div>
@@ -173,10 +173,10 @@ export default function JobDetailPage() {
 
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold">Candidates ({candidates.length})</h2>
+          <h2 className="font-display text-lg">Candidates ({candidates.length})</h2>
           <div className="flex gap-2">
-            <input className="h-9 rounded-lg border border-gray-300 px-3 text-sm w-48" placeholder="Search by name or email..." value={search} onChange={(e) => setSearch(e.target.value)} />
-            <select className="h-9 rounded-lg border border-gray-300 px-3 text-sm bg-white" value={filterScore} onChange={(e) => setFilterScore(e.target.value)}>
+            <input className="h-9 rounded-lg border border-frost-300/20 bg-frost-900 px-3 text-sm text-paper placeholder:text-paper/30 w-48 focus:outline-none focus:ring-1 focus:ring-signal-amber/20" placeholder="Search by name or email..." value={search} onChange={(e) => setSearch(e.target.value)} />
+            <select className="h-9 rounded-lg border border-frost-300/20 bg-frost-900 px-3 text-sm text-paper" value={filterScore} onChange={(e) => setFilterScore(e.target.value)}>
               <option value="">All scores</option>
               <option value="80">80%+</option>
               <option value="60">60%+</option>
@@ -186,7 +186,7 @@ export default function JobDetailPage() {
         </div>
         {candidates.length === 0 ? (
           <Card><CardContent className="py-12 text-center">
-            <p className="text-gray-500">No candidates found. Upload resumes to get started.</p>
+            <p className="text-paper/50">No candidates found. Upload resumes to get started.</p>
           </CardContent></Card>
         ) : (
           <div className="space-y-3">
@@ -194,11 +194,11 @@ export default function JobDetailPage() {
               <div key={candidate.id} className="flex items-center gap-3">
                 <input type="checkbox" className="w-4 h-4" checked={selectedCandidates.has(candidate.id)} onChange={() => toggleSelect(candidate.id)} />
                 <Link href={`/dashboard/candidates/${candidate.id}`} className="flex-1">
-                  <Card className="hover:shadow-md transition-shadow cursor-pointer">
+                  <Card className="glass-hover transition-shadow cursor-pointer">
                     <CardContent className="p-4 flex items-center justify-between">
                       <div>
                         <h3 className="font-medium">{candidate.name}</h3>
-                        <p className="text-sm text-gray-500">{candidate.email} {candidate.currentCompany ? `· ${candidate.currentCompany}` : ""}</p>
+                        <p className="text-sm text-paper/50">{candidate.email} {candidate.currentCompany ? `· ${candidate.currentCompany}` : ""}</p>
                         <div className="flex flex-wrap gap-1 mt-2">
                           {candidate.skills?.slice(0, 5).map((s: any) => (<Badge key={s.name} variant="outline">{s.name}</Badge>))}
                         </div>
@@ -207,7 +207,7 @@ export default function JobDetailPage() {
                         {candidate.confidenceScore && (
                           <Badge variant={candidate.confidenceScore > 80 ? "success" : candidate.confidenceScore > 60 ? "warning" : "error"}>{candidate.confidenceScore}% conf</Badge>
                         )}
-                        {candidate.matchScore !== null && <p className="text-2xl font-bold text-blue-600">{Math.round(candidate.matchScore)}%</p>}
+                        {candidate.matchScore !== null && <p className="font-mono text-2xl text-signal-amber">{Math.round(candidate.matchScore)}%</p>}
                         <Badge>{candidate.status}</Badge>
                       </div>
                     </CardContent>
