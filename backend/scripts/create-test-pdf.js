@@ -1,0 +1,12 @@
+const fs = require("fs");
+const path = require("path");
+
+// Create a realistic test resume PDF with actual content
+const pdfContent = Buffer.from(
+  "%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 612 792]/Contents 4 0 R/Resources<</Font<</F1 5 0 R>>>>>>endobj\n4 0 obj<</Length 500>>stream\nBT /F1 12 Tf 100 740 Td (John Doe) Tj\nBT /F1 10 Tf 100 720 Td (john.doe@email.com | +1-555-123-4567) Tj\nBT /F1 10 Tf 100 700 Td (https://linkedin.com/in/johndoe) Tj\nBT /F1 10 Tf 100 680 Td (https://github.com/johndoe) Tj\nBT /F1 14 Tf 100 650 Td (Professional Experience) Tj\nBT /F1 12 Tf 100 625 Td (Senior Frontend Engineer | TechCorp | 2020-2024) Tj\nBT /F1 10 Tf 100 600 Td (Led development of React-based dashboard serving 1M+ users.) Tj\nBT /F1 10 Tf 100 580 Td (Built REST APIs with Node.js and Express. Managed PostgreSQL databases.) Tj\nBT /F1 10 Tf 100 560 Td (Implemented CI/CD pipelines using Docker and AWS.) Tj\nBT /F1 12 Tf 100 530 Td (Frontend Developer | StartupXYZ | 2018-2020) Tj\nBT /F1 10 Tf 100 505 Td (Developed responsive UIs with React, TypeScript, and Tailwind CSS.) Tj\nBT /F1 14 Tf 100 470 Td (Education) Tj\nBT /F1 10 Tf 100 445 Td (Bachelor of Science in Computer Science, MIT, 2018, CGPA: 3.8) Tj\nBT /F1 14 Tf 100 410 Td (Skills) Tj\nBT /F1 10 Tf 100 385 Td (React, TypeScript, JavaScript, Node.js, Express, Next.js, PostgreSQL) Tj\nBT /F1 10 Tf 100 365 Td (Docker, Kubernetes, AWS, Git, CI/CD, Tailwind CSS, HTML, CSS, Redux) Tj\nBT /F1 10 Tf 100 345 Td (Python, GraphQL, REST API, MongoDB, Redis, Agile, Scrum) Tj\nBT /F1 14 Tf 100 310 Td (Projects) Tj\nBT /F1 10 Tf 100 285 Td (E-commerce Platform: React, Node.js, PostgreSQL - Full-stack marketplace) Tj\nBT /F1 14 Tf 100 250 Td (Certifications) Tj\nBT /F1 10 Tf 100 225 Td (AWS Certified Solutions Architect, 2023) Tj\nBT /F1 10 Tf 100 205 Td (Certified Kubernetes Administrator, 2022) Tj\nendstream\nendobj\n5 0 obj<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>endobj\nxref\n0 6\n0000000000 65535 f\n0000000009 00000 n\n0000000058 00000 n\n0000000115 00000 n\n0000000266 00000 n\n0000000790 00000 n\ntrailer<</Size 6/Root 1 0 R>>\nstartxref\n865\n%%EOF"
+);
+
+const filePath = path.join("E:/resume ai parser/backend/uploads", "john-doe-resume.pdf");
+fs.writeFileSync(filePath, pdfContent);
+console.log("Created test resume PDF at:", filePath);
+console.log("File size:", fs.statSync(filePath).size, "bytes");

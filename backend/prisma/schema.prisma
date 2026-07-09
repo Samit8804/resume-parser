@@ -1,0 +1,275 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  RECRUITER
+  VIEWER
+}
+
+enum JobStatus {
+  ACTIVE
+  ARCHIVED
+  CLOSED
+}
+
+enum ApplicationMethod {
+  PUBLIC_LINK
+  MANUAL_UPLOAD
+  BOTH
+}
+
+enum CandidateStatus {
+  APPLIED
+  SCREENING
+  SHORTLISTED
+  TECHNICAL_INTERVIEW
+  HR_INTERVIEW
+  SELECTED
+  OFFER_SENT
+  HIRED
+  REJECTED
+}
+
+enum CandidateSource {
+  PUBLIC_APPLICATION
+  MANUAL_UPLOAD
+}
+
+enum EmailStatus {
+  DRAFT
+  SENT
+  FAILED
+  SCHEDULED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String?
+  name          String?
+  image         String?
+  role          UserRole  @default(RECRUITER)
+  emailVerified Boolean   @default(false)
+  googleId      String?
+  companyId     String?
+  company       Company?  @relation(fields: [companyId], references: [id])
+  jobs          Job[]
+  notes         Note[]
+  emails        Email[]
+  notifications Notification[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("users")
+}
+
+model Company {
+  id          String   @id @default(cuid())
+  name        String
+  logo        String?
+  description String?
+  users         User[]
+  jobs          Job[]
+  emailTemplates EmailTemplate[]
+  createdAt     DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("companies")
+}
+
+model Job {
+  id                String             @id @default(cuid())
+  title             String
+  slug              String?
+  department        String?
+  type              String?
+  experienceMin     Int?
+  experienceMax     Int?
+  salaryMin         Float?
+  salaryMax         Float?
+  location          String?
+  description       String?
+  responsibilities  String?
+  benefits          String?
+  deadline          DateTime?
+  status            JobStatus          @default(ACTIVE)
+  applicationMethod ApplicationMethod  @default(BOTH)
+  skills            JobSkill[]
+  education         String?
+  creatorId         String
+  creator           User               @relation(fields: [creatorId], references: [id])
+  companyId         String?
+  company           Company?           @relation(fields: [companyId], references: [id])
+  candidates        Candidate[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  @@map("jobs")
+}
+
+model JobSkill {
+  id        String @id @default(cuid())
+  jobId     String
+  job       Job    @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  name      String
+  isRequired Boolean @default(true)
+  category  String?
+
+  @@map("job_skills")
+}
+
+model Candidate {
+  id              String            @id @default(cuid())
+  jobId           String
+  job             Job               @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  name            String
+  email           String?
+  phone           String?
+  linkedIn        String?
+  github          String?
+  portfolio       String?
+  currentCompany  String?
+  currentTitle    String?
+  currentCtc      Float?
+  expectedCtc     Float?
+  noticePeriod    String?
+  coverLetter     String?
+  address         String?
+  experience      Int?
+  education       String?
+  status          CandidateStatus   @default(APPLIED)
+  source          CandidateSource   @default(MANUAL_UPLOAD)
+  matchScore      Float?
+  confidenceScore Float?
+  aiSummary       String?
+  strengths       String?
+  weaknesses      String?
+  verdict         String?
+  rawResumePath   String?
+  parsedData      Json?
+  skills          CandidateSkill[]
+  projects        CandidateProject[]
+  certifications  CandidateCertification[]
+  notes           Note[]
+  pipelineLogs    PipelineLog[]
+  emails          Email[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@map("candidates")
+}
+
+model CandidateSkill {
+  id          String    @id @default(cuid())
+  candidateId String
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  name        String
+  category    String?
+  yearsOfExperience Float?
+  level       String?
+
+  @@map("candidate_skills")
+}
+
+model CandidateProject {
+  id          String    @id @default(cuid())
+  candidateId String
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  name        String
+  techStack   String?
+  description String?
+  link        String?
+
+  @@map("candidate_projects")
+}
+
+model CandidateCertification {
+  id          String    @id @default(cuid())
+  candidateId String
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  name        String
+  issuer      String?
+  year        Int?
+
+  @@map("candidate_certifications")
+}
+
+model Note {
+  id          String    @id @default(cuid())
+  content     String
+  candidateId String
+  candidate   Candidate @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  authorId    String
+  author      User      @relation(fields: [authorId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("notes")
+}
+
+model PipelineLog {
+  id          String          @id @default(cuid())
+  candidateId String
+  candidate   Candidate       @relation(fields: [candidateId], references: [id], onDelete: Cascade)
+  fromStatus  CandidateStatus
+  toStatus    CandidateStatus
+  changedById String?
+  createdAt   DateTime        @default(now())
+
+  @@map("pipeline_logs")
+}
+
+model EmailTemplate {
+  id        String   @id @default(cuid())
+  name      String
+  subject   String
+  body      String
+  category  String
+  companyId String?
+  company   Company? @relation(fields: [companyId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("email_templates")
+}
+
+model Email {
+  id            String       @id @default(cuid())
+  subject       String
+  body          String
+  recipient     String
+  senderId      String
+  sender        User         @relation(fields: [senderId], references: [id])
+  candidateId   String?
+  candidate     Candidate?   @relation(fields: [candidateId], references: [id])
+  jobId         String?
+  status        EmailStatus  @default(SENT)
+  deliveryStatus String?
+  openStatus    Boolean?
+  scheduledAt   DateTime?
+  sentAt        DateTime?
+  createdAt     DateTime     @default(now())
+
+  @@map("emails")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  title     String
+  message   String
+  type      String
+  read      Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+
+  @@map("notifications")
+}
