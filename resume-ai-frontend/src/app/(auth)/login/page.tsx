@@ -32,16 +32,16 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-ink px-4">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle>ResumeRank AI</CardTitle>
-          <p className="text-sm text-gray-500 mt-1">Sign in to your account</p>
+          <p className="text-sm text-paper/50 mt-1">Sign in to your account</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="p-3 text-sm bg-red-50 border border-red-200 text-red-700 rounded-lg">
+              <div className="p-3 text-sm bg-flag-coral/10 border border-flag-coral/30 text-flag-coral rounded-lg">
                 {error}
               </div>
             )}
@@ -57,9 +57,9 @@ export default function LoginPage() {
               {loading ? "Signing in..." : "Sign in"}
             </Button>
           </form>
-          <p className="mt-4 text-center text-sm text-gray-500">
+          <p className="mt-4 text-center text-sm text-paper/50">
             Don&apos;t have an account?{" "}
-            <Link href="/register" className="text-blue-600 hover:underline">
+            <Link href="/register" className="text-signal-amber hover:underline">
               Register
             </Link>
           </p>
