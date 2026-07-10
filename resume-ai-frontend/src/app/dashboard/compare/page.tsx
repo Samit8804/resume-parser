@@ -13,12 +13,14 @@ export default function ComparePage() {
   const router = useRouter()
   const [data, setData] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const idsParam = searchParams.get("ids")
+  const jobId = searchParams.get("jobId")
 
   useEffect(() => {
-    const ids = searchParams.get("ids")?.split(",") || []
+    const ids = idsParam?.split(",") || []
     if (ids.length < 2) { router.push("/dashboard"); return }
     insightsApi.compare(ids).then(setData).catch(console.error).finally(() => setLoading(false))
-  }, [searchParams, router])
+  }, [idsParam, router])
 
   if (loading) return <div className="text-center py-12 text-paper/50">Loading comparison...</div>
   if (!data) return <div className="text-center py-12 text-paper/50">Failed to load comparison</div>
@@ -27,7 +29,7 @@ export default function ComparePage() {
 
   return (
     <div className="space-y-6">
-      <Link href={`/dashboard/jobs/${searchParams.get("jobId")}`} className="text-sm text-signal-amber hover:underline inline-block">&larr; Back to job</Link>
+      <Link href={`/dashboard/jobs/${jobId}`} className="text-sm text-signal-amber hover:underline inline-block">&larr; Back to job</Link>
       <h1 className="font-display text-2xl">Candidate Comparison</h1>
 
       <div className="overflow-x-auto">

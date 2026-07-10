@@ -13,10 +13,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname()
   const [notifCount, setNotifCount] = useState(0)
   const [scrolled, setScrolled] = useState(false)
+  const [redirecting, setRedirecting] = useState(false)
 
   useEffect(() => {
-    if (!isLoading && !user) router.push("/login")
+    if (!isLoading && !user) {
+      setRedirecting(true)
+      router.push("/login")
+    }
   }, [user, isLoading, router])
+
+  useEffect(() => {
+    if (redirecting && user) setRedirecting(false)
+  }, [redirecting, user])
 
   useEffect(() => {
     if (user) {
@@ -34,7 +42,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
-  if (isLoading) {
+  if (isLoading || redirecting) {
     return (
       <div className="min-h-screen bg-ink flex items-center justify-center">
         <div className="w-8 h-8 border-2 border-signal-amber border-t-transparent rounded-full animate-spin" />

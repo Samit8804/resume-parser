@@ -19,13 +19,26 @@ export default function JobDetailPage() {
   const [search, setSearch] = useState("")
   const [filterScore, setFilterScore] = useState("")
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const mountedRef = useRef(true)
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
+
+  useEffect(() => {
+    mountedRef.current = true
+    return () => {
+      mountedRef.current = false
+      if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    }
+  }, [])
 
   const fetchJob = () => {
     setLoading(true)
     jobsApi.get(id as string).then((j) => {
+      if (!mountedRef.current) return
       setJob(j)
       insightsApi.get(id as string).then(setInsights).catch(() => {})
-    }).catch(console.error).finally(() => setLoading(false))
+    }).catch(console.error).finally(() => {
+      if (mountedRef.current) setLoading(false)
+    })
   }
 
   useEffect(() => { fetchJob() }, [id])
@@ -40,7 +53,7 @@ export default function JobDetailPage() {
       formData.append("jobId", id as string)
       Array.from(files).forEach((f) => formData.append("resumes", f))
       await uploadApi.bulkUpload(formData)
-      setTimeout(fetchJob, 2000)
+      timeoutRef.current = setTimeout(fetchJob, 2000)
     } catch (err: any) {
       setUploadError(err.message || "Upload failed")
     } finally {

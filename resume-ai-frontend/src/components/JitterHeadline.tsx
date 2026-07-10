@@ -24,27 +24,6 @@ export default function JitterHeadline({ text, as: Tag = "h1", className = "" }:
     })
   }, [])
 
-  const chars = text.split("").map((char, i) => {
-    const dx = Math.random() * 16 - 8
-    const dy = Math.random() * 16 - 8
-    const dr = Math.random() * 6 - 3
-    return (
-      <span
-        key={i}
-        className="headline-char inline-block"
-        style={{
-          animation: `jitter-in 350ms cubic-bezier(0.2,0.8,0.2,1) both`,
-          animationDelay: `${i * 18}ms`,
-          "--dx": `${dx}px`,
-          "--dy": `${dy}px`,
-          "--dr": `${dr}deg`,
-        } as React.CSSProperties}
-      >
-        {char === " " ? "\u00A0" : char}
-      </span>
-    )
-  })
-
   const words = text.split(" ").map((word, i) => (
     <span key={i} className="headline-word inline-block" style={{ display: "inline-block" }}>
       {i > 0 ? "\u00A0" : ""}

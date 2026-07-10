@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { emailApi, candidatesApi } from "@/lib/api"
 import { Button } from "@/components/ui/button"
@@ -16,6 +16,7 @@ export default function ComposeEmailPage() {
 
   const [subject, setSubject] = useState("")
   const [body, setBody] = useState("")
+  const templateApplied = useRef<string | null>(null)
   const [recipient, setRecipient] = useState("")
   const [recipientType, setRecipientType] = useState("single")
   const [selectedCandidates, setSelectedCandidates] = useState<any[]>([])
@@ -32,9 +33,13 @@ export default function ComposeEmailPage() {
   }, [])
 
   useEffect(() => {
-    if (templateId && templates.length > 0) {
+    if (templateId && templates.length > 0 && templateApplied.current !== templateId) {
       const t = templates.find((t: any) => t.id === templateId)
-      if (t) { setSubject(t.subject); setBody(t.body) }
+      if (t) {
+        setSubject(t.subject)
+        setBody(t.body)
+        templateApplied.current = templateId
+      }
     }
   }, [templateId, templates])
 

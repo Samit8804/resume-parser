@@ -28,33 +28,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
+    let mounted = true
+
     const init = async () => {
       const storedToken = localStorage.getItem("token")
-      if (storedToken) {
+      if (storedToken && mounted) {
         setToken(storedToken)
         try {
           const { data: { session } } = await supabase.auth.getSession()
-          if (session) {
+          if (session && mounted) {
             const res = await authApi.me()
-            setUser(res.user)
-          } else {
+            if (mounted) setUser(res.user)
+          } else if (mounted) {
             localStorage.removeItem("token")
             setToken(null)
           }
         } catch {
-          localStorage.removeItem("token")
-          setToken(null)
+          if (mounted) {
+            localStorage.removeItem("token")
+            setToken(null)
+          }
         }
       }
-      setIsLoading(false)
+      if (mounted) setIsLoading(false)
     }
     init()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (!mounted) return
       if (session?.access_token) {
         localStorage.setItem("token", session.access_token)
         setToken(session.access_token)
-        authApi.me().then(res => setUser(res.user)).catch(() => {})
       } else if (event === "SIGNED_OUT") {
         localStorage.removeItem("token")
         setToken(null)
@@ -62,7 +66,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     })
 
-    return () => subscription.unsubscribe()
+    return () => {
+      mounted = false
+      subscription.unsubscribe()
+    }
   }, [])
 
   const login = async (email: string, password: string) => {
