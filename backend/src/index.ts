@@ -15,9 +15,18 @@ import notificationRoutes from "./routes/notifications";
 const app = express();
 const prisma = new PrismaClient();
 
-const frontendUrls = process.env.FRONTEND_URL || "http://localhost:3000,https://resume-parser-tau-ten.vercel.app";
+const frontendUrls = process.env.FRONTEND_URL || "http://localhost:3000";
 const allowedOrigins = frontendUrls.split(",").map(s => s.trim());
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.use(cors({
+  origin: (origin, cb) => {
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith(".vercel.app")) {
+      cb(null, true);
+    } else {
+      cb(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+}));
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
