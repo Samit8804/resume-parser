@@ -15,7 +15,8 @@ import notificationRoutes from "./routes/notifications";
 const app = express();
 const prisma = new PrismaClient();
 
-const allowedOrigins = (process.env.FRONTEND_URL || "http://localhost:3000").split(",").map(s => s.trim());
+const frontendUrls = process.env.FRONTEND_URL || "http://localhost:3000,https://resume-parser-tau-ten.vercel.app";
+const allowedOrigins = frontendUrls.split(",").map(s => s.trim());
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
