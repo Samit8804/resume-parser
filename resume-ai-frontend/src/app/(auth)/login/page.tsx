@@ -60,6 +60,11 @@ export default function LoginPage() {
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Signing in..." : "Sign in"}
             </Button>
+            <div className="text-center">
+              <Link href="/forgot-password" className="text-xs text-paper/50 hover:text-signal-amber transition-colors">
+                Forgot password?
+              </Link>
+            </div>
           </form>
           <p className="mt-4 text-center text-sm text-paper/50">
             Don&apos;t have an account?{" "}

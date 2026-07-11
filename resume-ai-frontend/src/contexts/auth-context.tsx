@@ -74,7 +74,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) throw error
+    if (error) {
+      const res = await authApi.login({ email, password })
+      localStorage.setItem("token", res.token)
+      setToken(res.token)
+      setUser(res.user)
+      return
+    }
     const accessToken = data.session.access_token
     localStorage.setItem("token", accessToken)
     setToken(accessToken)
