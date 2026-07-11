@@ -17,42 +17,52 @@ export default function OpenGraphImage() {
           justifyContent: "center",
           background: "#0a0a0f",
           color: "#f5f5f0",
-          fontFamily: "Inter, sans-serif",
+          fontFamily: "system-ui, sans-serif",
+          padding: 80,
         }}
       >
         <div
           style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "radial-gradient(ellipse 600px 400px at 50% 0%, rgba(232,163,61,0.12) 0%, transparent 70%)",
-          }}
-        />
-        <div
-          style={{
-            fontSize: 80,
-            fontWeight: 700,
-            letterSpacing: "-0.03em",
-            lineHeight: 1.1,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
             textAlign: "center",
-            marginBottom: 16,
           }}
         >
-          <span style={{ color: "#f5f5f0" }}>See the reasoning.</span>
-          <br />
-          <span style={{ color: "#e8a33d" }}>Not just the ranking.</span>
+          <div
+            style={{
+              fontSize: 80,
+              fontWeight: 700,
+              letterSpacing: "-0.03em",
+              lineHeight: 1.1,
+              color: "#f5f5f0",
+              marginBottom: 16,
+            }}
+          >
+            See the reasoning.
+          </div>
+          <div
+            style={{
+              fontSize: 72,
+              fontWeight: 700,
+              letterSpacing: "-0.03em",
+              lineHeight: 1.1,
+              color: "#e8a33d",
+              marginBottom: 24,
+            }}
+          >
+            Not just the ranking.
+          </div>
+          <div
+            style={{
+              fontSize: 28,
+              color: "rgba(245,245,240,0.5)",
+              maxWidth: 600,
+            }}
+          >
+            AI-powered resume parsing, scoring, and candidate matching.
+          </div>
         </div>
-        <p
-          style={{
-            fontSize: 28,
-            color: "rgba(245,245,240,0.5)",
-            maxWidth: 600,
-            textAlign: "center",
-            marginTop: 8,
-          }}
-        >
-          Explainable AI that parses, scores, and matches resumes — then shows you exactly why.
-        </p>
       </div>
     ),
     { ...size }
