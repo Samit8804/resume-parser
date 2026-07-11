@@ -3,8 +3,8 @@ import dynamic from "next/dynamic"
 import GlassCard from "@/components/GlassCard"
 
 const NavBar = dynamic(() => import("@/components/NavBar"))
-const JitterHeadline = dynamic(() => import("@/components/JitterHeadline"), { ssr: false })
-const CursorReveal = dynamic(() => import("@/components/CursorReveal"), { ssr: false })
+const JitterHeadline = dynamic(() => import("@/components/JitterHeadline"))
+const CursorReveal = dynamic(() => import("@/components/CursorReveal"))
 
 export default function LandingPage() {
   const jsonLd = {
