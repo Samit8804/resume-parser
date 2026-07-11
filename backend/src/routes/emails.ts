@@ -38,7 +38,7 @@ router.post("/bulk", async (req: Request, res: Response) => {
       return res.status(400).json({ error: "candidateIds, subject, body required" });
     }
     const candidates = await prisma.candidate.findMany({
-      where: { id: { in: candidateIds } },
+      where: { id: { in: candidateIds }, job: { creatorId: req.userId } },
       include: { job: true },
     });
     if (!candidates.length) return res.status(404).json({ error: "No candidates found" });
@@ -70,7 +70,7 @@ router.post("/bulk", async (req: Request, res: Response) => {
 router.get("/history", async (req: Request, res: Response) => {
   try {
     const { candidateId, jobId } = req.query;
-    const where: any = {};
+    const where: any = { senderId: req.userId };
     if (candidateId) where.candidateId = candidateId as string;
     if (jobId) where.jobId = jobId as string;
     const emails = await prisma.email.findMany({
@@ -85,13 +85,13 @@ router.get("/history", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/analytics", async (_req: Request, res: Response) => {
+router.get("/analytics", async (req: Request, res: Response) => {
   try {
-    const total = await prisma.email.count();
-    const sent = await prisma.email.count({ where: { status: "SENT" } });
-    const failed = await prisma.email.count({ where: { status: "FAILED" } });
-    const scheduled = await prisma.email.count({ where: { status: "SCHEDULED" } });
-    const opened = await prisma.email.count({ where: { openStatus: true } });
+    const total = await prisma.email.count({ where: { senderId: req.userId } });
+    const sent = await prisma.email.count({ where: { senderId: req.userId, status: "SENT" } });
+    const failed = await prisma.email.count({ where: { senderId: req.userId, status: "FAILED" } });
+    const scheduled = await prisma.email.count({ where: { senderId: req.userId, status: "SCHEDULED" } });
+    const opened = await prisma.email.count({ where: { senderId: req.userId, openStatus: true } });
     res.json({
       total,
       sent,

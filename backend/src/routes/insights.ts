@@ -9,8 +9,8 @@ router.use(authMiddleware);
 router.get("/:jobId/insights", async (req: Request, res: Response) => {
   try {
     const { jobId } = req.params as { jobId: string };
-    const job = await prisma.job.findUnique({
-      where: { id: jobId },
+    const job = await prisma.job.findFirst({
+      where: { id: jobId, creatorId: req.userId },
       include: { skills: true, candidates: { include: { skills: true } } },
     });
     if (!job) return res.status(404).json({ error: "Job not found" });
@@ -83,7 +83,7 @@ router.post("/compare", async (req: Request, res: Response) => {
     }
 
     const candidates = await prisma.candidate.findMany({
-      where: { id: { in: candidateIds } },
+      where: { id: { in: candidateIds }, job: { creatorId: req.userId } },
       include: { skills: true, projects: true, certifications: true },
     });
 

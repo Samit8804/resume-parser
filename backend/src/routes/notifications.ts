@@ -32,6 +32,8 @@ router.get("/unread-count", async (req: Request, res: Response) => {
 
 router.patch("/:id/read", async (req: Request, res: Response) => {
   try {
+    const notif = await prisma.notification.findFirst({ where: { id: req.params.id as string, userId: req.userId } });
+    if (!notif) return res.status(404).json({ error: "Notification not found" });
     await prisma.notification.update({
       where: { id: req.params.id as string },
       data: { read: true },

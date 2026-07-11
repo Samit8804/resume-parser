@@ -9,7 +9,7 @@ router.use(authMiddleware);
 router.get("/", async (req: Request, res: Response) => {
   try {
     const { jobId, search, status, minScore, maxScore } = req.query;
-    const where: any = {};
+    const where: any = { job: { creatorId: req.userId } };
 
     if (jobId) where.jobId = jobId as string;
     if (status) where.status = status as string;
@@ -37,8 +37,8 @@ router.get("/", async (req: Request, res: Response) => {
 router.get("/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params as { id: string };
-    const candidate = await prisma.candidate.findUnique({
-      where: { id },
+    const candidate = await prisma.candidate.findFirst({
+      where: { id, job: { creatorId: req.userId } },
       include: {
         skills: true,
         projects: true,
@@ -59,7 +59,7 @@ router.patch("/:id/status", async (req: Request, res: Response) => {
   try {
     const { id } = req.params as { id: string };
     const { status } = req.body;
-    const candidate = await prisma.candidate.findUnique({ where: { id } });
+    const candidate = await prisma.candidate.findFirst({ where: { id, job: { creatorId: req.userId } } });
     if (!candidate) return res.status(404).json({ error: "Candidate not found" });
 
     const updated = await prisma.candidate.update({
@@ -86,9 +86,10 @@ router.patch("/:id/status", async (req: Request, res: Response) => {
 router.post("/:id/notes", async (req: Request, res: Response) => {
   try {
     const { id } = req.params as { id: string };
-    const { content } = req.body;
+    const candidate = await prisma.candidate.findFirst({ where: { id, job: { creatorId: req.userId } } });
+    if (!candidate) return res.status(404).json({ error: "Candidate not found" });
     const note = await prisma.note.create({
-      data: { content, candidateId: id, authorId: req.userId! },
+      data: { content: req.body.content, candidateId: id, authorId: req.userId! },
       include: { author: { select: { id: true, name: true, email: true } } },
     });
     res.status(201).json(note);

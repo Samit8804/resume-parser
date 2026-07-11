@@ -82,8 +82,8 @@ router.get("/", async (req: Request, res: Response) => {
 router.get("/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params as { id: string };
-    const job = await prisma.job.findUnique({
-      where: { id },
+    const job = await prisma.job.findFirst({
+      where: { id, creatorId: req.userId },
       include: { skills: true, candidates: { include: { skills: true, projects: true, certifications: true }, orderBy: { matchScore: "desc" } } },
     });
     if (!job) return res.status(404).json({ error: "Job not found" });
@@ -97,12 +97,16 @@ router.get("/:id", async (req: Request, res: Response) => {
 router.patch("/:id", async (req: Request, res: Response) => {
   try {
     const { id } = req.params as { id: string };
-    const job = await prisma.job.update({
+    const job = await prisma.job.findFirst({
+      where: { id, creatorId: req.userId },
+    });
+    if (!job) return res.status(404).json({ error: "Job not found" });
+    const updated = await prisma.job.update({
       where: { id },
       data: req.body,
       include: { skills: true },
     });
-    res.json(job);
+    res.json(updated);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal server error" });

@@ -11,8 +11,8 @@ router.use(authMiddleware);
 router.post("/:candidateId", async (req: Request, res: Response) => {
   try {
     const { candidateId } = req.params as { candidateId: string };
-    const candidate = await prisma.candidate.findUnique({
-      where: { id: candidateId },
+    const candidate = await prisma.candidate.findFirst({
+      where: { id: candidateId, job: { creatorId: req.userId } },
       include: { job: { include: { skills: true } } },
     });
     if (!candidate) return res.status(404).json({ error: "Candidate not found" });

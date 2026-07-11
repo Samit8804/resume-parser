@@ -95,7 +95,7 @@ router.post("/", upload.single("resume"), async (req: Request, res: Response) =>
     const { jobId } = req.body;
     if (!jobId) return res.status(400).json({ error: "jobId is required" });
 
-    const job = await prisma.job.findUnique({ where: { id: jobId } });
+    const job = await prisma.job.findFirst({ where: { id: jobId, creatorId: req.userId } });
     if (!job) return res.status(404).json({ error: "Job not found" });
 
     const candidate = await prisma.candidate.create({
@@ -117,6 +117,9 @@ router.post("/bulk", upload.array("resumes", 100), async (req: Request, res: Res
     const { jobId } = req.body;
     if (!files || files.length === 0) return res.status(400).json({ error: "No files uploaded" });
     if (!jobId) return res.status(400).json({ error: "jobId is required" });
+
+    const job = await prisma.job.findFirst({ where: { id: jobId, creatorId: req.userId } });
+    if (!job) return res.status(404).json({ error: "Job not found" });
 
     const candidates = await Promise.all(
       files.map((file) =>
