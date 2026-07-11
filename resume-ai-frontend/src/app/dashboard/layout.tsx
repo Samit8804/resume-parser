@@ -6,6 +6,7 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { notificationApi } from "@/lib/api"
+import { CommandPalette } from "@/components/CommandPalette"
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, isLoading, logout } = useAuth()
@@ -95,6 +96,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </span>
               )}
             </Link>
+            <span className="text-xs text-paper/30 hidden md:block font-mono">Ctrl+K</span>
             <span className="text-sm text-paper/50 hidden sm:block">{user.name || user.email}</span>
             <Button
               variant="ghost"
@@ -108,6 +110,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </div>
       </header>
 
+      <CommandPalette />
       <main className="pt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         {children}
       </main>

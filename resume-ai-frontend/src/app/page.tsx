@@ -25,6 +25,17 @@ export default function LandingPage() {
   useScrollReveal()
   const [scrolled, setScrolled] = useState(false)
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "ResumeRank AI",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    description: "Explainable AI that parses, scores, and matches resumes — then shows you exactly why.",
+    url: "https://resume-parser-tau-ten.vercel.app",
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  }
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
     window.addEventListener("scroll", onScroll)
@@ -33,6 +44,10 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-ink">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Nav */}
       <nav
         className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${

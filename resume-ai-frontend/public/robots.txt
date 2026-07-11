@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /dashboard/
+Sitemap: https://resume-parser-tau-ten.vercel.app/sitemap.xml

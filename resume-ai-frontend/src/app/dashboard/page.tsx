@@ -6,6 +6,7 @@ import { jobsApi, insightsApi } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { CardSkeleton } from "@/components/ui/skeleton"
 
 export default function DashboardPage() {
   const [jobs, setJobs] = useState<any[]>([])
@@ -62,11 +63,15 @@ export default function DashboardPage() {
       </div>
 
       {loading ? (
-        <div className="text-center py-12 text-paper/50">Loading...</div>
+        <div className="grid gap-4">
+          {[1, 2, 3].map((i) => <CardSkeleton key={i} />)}
+        </div>
       ) : jobs.length === 0 ? (
         <Card>
-          <CardContent className="py-12 text-center">
-            <p className="text-paper/50 mb-4">No jobs yet. Create your first job posting to start screening candidates.</p>
+          <CardContent className="py-16 text-center space-y-4">
+            <p className="text-4xl">📋</p>
+            <p className="text-paper/70 font-medium">No jobs yet</p>
+            <p className="text-sm text-paper/50">Create your first job posting to start screening candidates.</p>
             <Link href="/dashboard/jobs/new">
               <Button>Create Your First Job</Button>
             </Link>

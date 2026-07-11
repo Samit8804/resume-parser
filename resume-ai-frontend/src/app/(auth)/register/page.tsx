@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useAuth } from "@/contexts/auth-context"
+import { useToast } from "@/components/ui/toast"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -16,6 +17,7 @@ export default function RegisterPage() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const { register } = useAuth()
+  const { toast } = useToast()
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -24,9 +26,11 @@ export default function RegisterPage() {
     setLoading(true)
     try {
       await register(name, email, password)
+      toast("Account created successfully!", "success")
       router.push("/dashboard")
     } catch (err: any) {
       setError(err.message || "Registration failed")
+      toast(err.message || "Registration failed", "error")
     } finally {
       setLoading(false)
     }

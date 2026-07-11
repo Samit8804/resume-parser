@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Fraunces, Inter, IBM_Plex_Mono } from "next/font/google"
 import "./globals.css"
 import { AuthProvider } from "@/contexts/auth-context"
+import { ToastProvider } from "@/components/ui/toast"
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -23,15 +24,27 @@ const ibmPlexMono = IBM_Plex_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "ResumeRank AI — Explainable AI Hiring Platform",
-  description: "See the reasoning. Not just the ranking.",
+  title: { default: "ResumeRank AI — Explainable AI Hiring Platform", template: "%s | ResumeRank AI" },
+  description: "See the reasoning. Not just the ranking. AI-powered resume parsing, scoring, and candidate matching with full explainability.",
+  openGraph: {
+    title: "ResumeRank AI — Explainable AI Hiring Platform",
+    description: "See the reasoning. Not just the ranking. AI-powered resume parsing, scoring, and candidate matching with full explainability.",
+    url: "https://resume-parser-tau-ten.vercel.app",
+    siteName: "ResumeRank AI",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ResumeRank AI — Explainable AI Hiring Platform",
+    description: "See the reasoning. Not just the ranking.",
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${fraunces.variable} ${inter.variable} ${ibmPlexMono.variable}`}>
       <body className="bg-ink text-paper font-sans antialiased">
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider><ToastProvider>{children}</ToastProvider></AuthProvider>
       </body>
     </html>
   )
