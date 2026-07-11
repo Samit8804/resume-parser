@@ -7,6 +7,7 @@ import { insightsApi } from "@/lib/api"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { downloadCsv } from "@/lib/export-csv"
 
 export default function ComparePage() {
   const searchParams = useSearchParams()
@@ -29,8 +30,27 @@ export default function ComparePage() {
 
   return (
     <div className="space-y-6">
-      <Link href={`/dashboard/jobs/${jobId}`} className="text-sm text-signal-amber hover:underline inline-block">&larr; Back to job</Link>
-      <h1 className="font-display text-2xl">Candidate Comparison</h1>
+      <div className="flex items-center justify-between">
+        <div>
+          <Link href={`/dashboard/jobs/${jobId}`} className="text-sm text-signal-amber hover:underline inline-block">&larr; Back to job</Link>
+          <h1 className="font-display text-2xl">Candidate Comparison</h1>
+        </div>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={() => {
+            downloadCsv(comparison.map((c: any) => ({
+              Name: c.name,
+              Email: c.email || "",
+              "Match Score": `${Math.round(c.matchScore)}%`,
+              Experience: `${c.experience || 0} years`,
+              Company: c.currentCompany || "",
+              Education: c.education || "",
+              Status: c.status,
+              Skills: (c.skills || []).join("; "),
+            })), "candidate_comparison")
+          }}>CSV</Button>
+          <Button variant="outline" size="sm" onClick={() => window.print()}>PDF</Button>
+        </div>
+      </div>
 
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">

@@ -9,6 +9,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { useSelection } from "@/hooks/use-selection"
 import { BulkActionBar } from "@/components/BulkActionBar"
+import { downloadCsv } from "@/lib/export-csv"
 
 export default function JobDetailPage() {
   const { id } = useParams()
@@ -174,7 +175,7 @@ export default function JobDetailPage() {
       <div>
         <div className="flex items-center justify-between mb-4">
           <h2 className="font-display text-lg">Candidates ({candidates.length})</h2>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <input className="h-9 rounded-lg border border-frost-300/20 bg-frost-900 px-3 text-sm text-paper placeholder:text-paper/30 w-48 focus:outline-none focus:ring-1 focus:ring-signal-amber/20" placeholder="Search by name or email..." value={search} onChange={(e) => setSearch(e.target.value)} />
             <select className="h-9 rounded-lg border border-frost-300/20 bg-frost-900 px-3 text-sm text-paper" value={filterScore} onChange={(e) => setFilterScore(e.target.value)}>
               <option value="">All scores</option>
@@ -182,6 +183,18 @@ export default function JobDetailPage() {
               <option value="60">60%+</option>
               <option value="40">40%+</option>
             </select>
+            <Button variant="outline" size="sm" onClick={() => {
+              downloadCsv(candidates.map((c: any) => ({
+                Name: c.name,
+                Email: c.email,
+                Company: c.currentCompany || "",
+                "Match Score": c.matchScore != null ? `${Math.round(c.matchScore)}%` : "",
+                Status: c.status,
+                Skills: (c.skills || []).map((s: any) => s.name).join("; "),
+                Confidence: c.confidenceScore != null ? `${c.confidenceScore}%` : "",
+              })), `candidates_${id}`)
+            }}>CSV</Button>
+            <Button variant="outline" size="sm" onClick={() => window.print()}>PDF</Button>
           </div>
         </div>
         {candidates.length === 0 ? (
@@ -226,6 +239,15 @@ export default function JobDetailPage() {
       {sel.someSelected && (
         <BulkActionBar
           selectedIds={selectedIds}
+          selectedData={candidates.filter((c: any) => sel.isSelected(c.id)).map((c: any) => ({
+            Name: c.name,
+            Email: c.email,
+            Company: c.currentCompany || "",
+            "Match Score": c.matchScore != null ? `${Math.round(c.matchScore)}%` : "",
+            Status: c.status,
+            Skills: (c.skills || []).map((s: any) => s.name).join("; "),
+            Confidence: c.confidenceScore != null ? `${c.confidenceScore}%` : "",
+          }))}
           jobId={id as string}
           onDeselectAll={sel.deselectAll}
           onRefresh={fetchJob}

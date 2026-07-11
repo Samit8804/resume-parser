@@ -3,9 +3,11 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { candidatesApi } from "@/lib/api"
+import { downloadCsv } from "@/lib/export-csv"
 
 interface BulkActionBarProps {
   selectedIds: string[]
+  selectedData: Record<string, any>[]
   jobId: string
   onDeselectAll: () => void
   onRefresh: () => void
@@ -13,7 +15,7 @@ interface BulkActionBarProps {
   emailUrl: string | null
 }
 
-export function BulkActionBar({ selectedIds, jobId, onDeselectAll, onRefresh, compareUrl, emailUrl }: BulkActionBarProps) {
+export function BulkActionBar({ selectedIds, selectedData, jobId, onDeselectAll, onRefresh, compareUrl, emailUrl }: BulkActionBarProps) {
   const [showNoteModal, setShowNoteModal] = useState(false)
   const [noteText, setNoteText] = useState("")
   const [changingStatus, setChangingStatus] = useState(false)
@@ -82,6 +84,12 @@ export function BulkActionBar({ selectedIds, jobId, onDeselectAll, onRefresh, co
         </select>
 
         <Button variant="outline" size="sm" onClick={() => setShowNoteModal(true)}>Add Note</Button>
+
+        <div className="w-px h-6 bg-frost-300/20" />
+
+        <Button variant="outline" size="sm" onClick={() => {
+          downloadCsv(selectedData, `candidates_${jobId}`)
+        }}>CSV</Button>
 
         <div className="w-px h-6 bg-frost-300/20" />
 
