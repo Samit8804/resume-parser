@@ -7,6 +7,8 @@ import { jobsApi, uploadApi, insightsApi } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { useSelection } from "@/hooks/use-selection"
+import { BulkActionBar } from "@/components/BulkActionBar"
 
 export default function JobDetailPage() {
   const { id } = useParams()
@@ -15,7 +17,6 @@ export default function JobDetailPage() {
   const [loading, setLoading] = useState(true)
   const [uploading, setUploading] = useState(false)
   const [uploadError, setUploadError] = useState("")
-  const [selectedCandidates, setSelectedCandidates] = useState<Set<string>>(new Set())
   const [search, setSearch] = useState("")
   const [filterScore, setFilterScore] = useState("")
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -62,21 +63,17 @@ export default function JobDetailPage() {
     }
   }
 
-  const toggleSelect = (candidateId: string) => {
-    const next = new Set(selectedCandidates)
-    if (next.has(candidateId)) next.delete(candidateId)
-    else next.add(candidateId)
-    setSelectedCandidates(next)
-  }
-
-  if (loading) return <div className="text-center py-12 text-paper/50">Loading...</div>
-  if (!job) return <div className="text-center py-12 text-paper/50">Job not found</div>
-
-  const candidates = (job.candidates || []).filter((c: any) => {
+  const candidates = (job?.candidates || []).filter((c: any) => {
     if (search && !c.name.toLowerCase().includes(search.toLowerCase()) && !c.email?.toLowerCase().includes(search.toLowerCase())) return false
     if (filterScore && (c.matchScore || 0) < parseFloat(filterScore)) return false
     return true
   })
+
+  const sel = useSelection(candidates.map((c: any) => c.id))
+
+  if (loading) return <div className="text-center py-12 text-paper/50">Loading...</div>
+  if (!job) return <div className="text-center py-12 text-paper/50">Job not found</div>
+  const selectedIds = Array.from(sel.selected)
 
   return (
     <div className="space-y-6">
@@ -89,16 +86,6 @@ export default function JobDetailPage() {
           </p>
         </div>
         <div className="flex items-center gap-3">
-          {selectedCandidates.size >= 2 && selectedCandidates.size <= 4 && (
-            <Link href={`/dashboard/compare?ids=${Array.from(selectedCandidates).join(",")}&jobId=${id}`}>
-              <Button variant="outline">Compare ({selectedCandidates.size})</Button>
-            </Link>
-          )}
-          {selectedCandidates.size >= 1 && (
-            <Link href={`/dashboard/emails/compose?candidateIds=${Array.from(selectedCandidates).join(",")}`}>
-              <Button variant="outline">Email ({selectedCandidates.size})</Button>
-            </Link>
-          )}
           {(job.applicationMethod === "MANUAL_UPLOAD" || job.applicationMethod === "BOTH") && (
             <>
               <Button variant="default" disabled={uploading} onClick={() => fileInputRef.current?.click()}>
@@ -203,9 +190,13 @@ export default function JobDetailPage() {
           </CardContent></Card>
         ) : (
           <div className="space-y-3">
+            <div className="flex items-center gap-3 pb-1">
+              <input type="checkbox" className="w-4 h-4" checked={sel.allSelected} ref={(el) => { if (el) el.indeterminate = sel.someSelected && !sel.allSelected }} onChange={sel.toggleAll} />
+              <span className="text-xs text-paper/30 font-mono">{sel.allSelected ? "Deselect all" : "Select all"}</span>
+            </div>
             {candidates.map((candidate: any) => (
               <div key={candidate.id} className="flex items-center gap-3">
-                <input type="checkbox" className="w-4 h-4" checked={selectedCandidates.has(candidate.id)} onChange={() => toggleSelect(candidate.id)} />
+                <input type="checkbox" className="w-4 h-4" checked={sel.isSelected(candidate.id)} onChange={() => sel.toggle(candidate.id)} />
                 <Link href={`/dashboard/candidates/${candidate.id}`} className="flex-1">
                   <Card className="glass-hover transition-shadow cursor-pointer">
                     <CardContent className="p-4 flex items-center justify-between">
@@ -231,6 +222,17 @@ export default function JobDetailPage() {
           </div>
         )}
       </div>
+
+      {sel.someSelected && (
+        <BulkActionBar
+          selectedIds={selectedIds}
+          jobId={id as string}
+          onDeselectAll={sel.deselectAll}
+          onRefresh={fetchJob}
+          compareUrl={selectedIds.length >= 2 && selectedIds.length <= 4 ? `/dashboard/compare?ids=${selectedIds.join(",")}&jobId=${id}` : null}
+          emailUrl={selectedIds.length >= 1 ? `/dashboard/emails/compose?candidateIds=${selectedIds.join(",")}` : null}
+        />
+      )}
     </div>
   )
 }
