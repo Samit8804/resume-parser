@@ -1,8 +1,6 @@
 import type { Metadata } from "next"
 import { Fraunces, Inter, IBM_Plex_Mono } from "next/font/google"
 import "./globals.css"
-import { AuthProvider } from "@/contexts/auth-context"
-import { ToastProvider } from "@/components/ui/toast"
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -46,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${fraunces.variable} ${inter.variable} ${ibmPlexMono.variable}`}>
       <body className="bg-ink text-paper font-sans antialiased">
-        <AuthProvider><ToastProvider>{children}</ToastProvider></AuthProvider>
+        {children}
       </body>
     </html>
   )
