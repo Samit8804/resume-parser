@@ -2,11 +2,13 @@
 
 import { useAuth } from "@/contexts/auth-context"
 import { useRouter, usePathname } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useCallback } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { notificationApi } from "@/lib/api"
 import { CommandPalette } from "@/components/CommandPalette"
+import { KeyboardShortcutsHelp } from "@/components/KeyboardShortcutsHelp"
+import { useHotkeys, useSequenceHotkey } from "@/hooks/use-hotkey"
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, isLoading, logout } = useAuth()
@@ -15,6 +17,25 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const [notifCount, setNotifCount] = useState(0)
   const [scrolled, setScrolled] = useState(false)
   const [redirecting, setRedirecting] = useState(false)
+  const [helpOpen, setHelpOpen] = useState(false)
+
+  useHotkeys([
+    { key: "?", shift: true, handler: () => setHelpOpen((v) => !v) },
+    { key: "/", shift: true, handler: () => setHelpOpen((v) => !v) },
+  ])
+
+  const seqSteps = useCallback(
+    () => [
+      { key: "d", handler: () => router.push("/dashboard") },
+      { key: "j", handler: () => router.push("/dashboard/jobs") },
+      { key: "e", handler: () => router.push("/dashboard/emails") },
+      { key: "n", handler: () => router.push("/dashboard/jobs/new") },
+      { key: "c", handler: () => router.push("/dashboard/emails/compose") },
+    ],
+    [router],
+  )
+
+  useSequenceHotkey("g", seqSteps())
 
   useEffect(() => {
     if (!isLoading && !user) {
@@ -97,6 +118,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               )}
             </Link>
             <span className="text-xs text-paper/30 hidden md:block font-mono">Ctrl+K</span>
+            <button onClick={() => setHelpOpen(true)} className="text-xs text-paper/20 hover:text-paper/50 transition-colors font-mono hidden lg:block">?</button>
             <span className="text-sm text-paper/50 hidden sm:block">{user.name || user.email}</span>
             <Button
               variant="ghost"
@@ -111,6 +133,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </header>
 
       <CommandPalette />
+      <KeyboardShortcutsHelp open={helpOpen} onClose={() => setHelpOpen(false)} />
       <main className="pt-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         {children}
       </main>
