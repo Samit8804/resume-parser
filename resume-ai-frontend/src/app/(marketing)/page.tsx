@@ -1,10 +1,6 @@
 import Link from "next/link"
-import dynamic from "next/dynamic"
 import GlassCard from "@/components/GlassCard"
 import NavBar from "@/components/NavBar"
-
-const JitterHeadline = dynamic(() => import("@/components/JitterHeadline"))
-const CursorReveal = dynamic(() => import("@/components/CursorReveal"))
 
 export default function LandingPage() {
   const jsonLd = {
@@ -23,16 +19,17 @@ export default function LandingPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <NavBar />
 
-      {/* Hero */}
       <section className="pt-32 pb-20 px-4 max-w-5xl mx-auto text-center relative">
         <div className="absolute inset-0 pointer-events-none" style={{
           background: "radial-gradient(ellipse 600px 400px at 50% 0%, rgba(232,163,61,0.08) 0%, transparent 70%)",
         }} />
         <div className="relative">
-          <div>
-            <JitterHeadline text="See the reasoning." className="text-5xl md:text-7xl lg:text-8xl text-paper mb-4" />
-            <JitterHeadline text="Not just the ranking." as="h2" className="text-4xl md:text-6xl lg:text-7xl text-signal-amber mb-8" />
-          </div>
+          <h1 className="font-display text-5xl md:text-7xl lg:text-8xl text-paper mb-4 leading-tight">
+            See the reasoning.
+          </h1>
+          <h2 className="font-display text-4xl md:text-6xl lg:text-7xl text-signal-amber mb-8 leading-tight">
+            Not just the ranking.
+          </h2>
           <p className="text-paper/50 text-lg max-w-xl mx-auto mb-10">
             Explainable AI that parses, scores, and matches resumes — then shows you exactly why.
           </p>
@@ -42,35 +39,22 @@ export default function LandingPage() {
           </div>
 
           <div className="mt-16 max-w-md mx-auto">
-            <CursorReveal
-              frostContent={
-                <div className="flex items-center justify-center h-full">
-                  <div className="text-center">
-                    <p className="text-6xl font-mono font-semibold text-paper/40" style={{ filter: "blur(4px)" }}>94%</p>
-                    <p className="text-sm text-paper/30 mt-1" style={{ filter: "blur(4px)" }}>Match Score</p>
-                  </div>
-                </div>
-              }
-            >
-              <GlassCard className="text-left">
-                <div className="flex items-center justify-between mb-4">
-                  <p className="text-5xl font-mono font-semibold text-signal-amber">94%</p>
-                  <span className="text-sm text-verified-teal font-mono">✔ Match</span>
-                </div>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between"><span>React</span><span className="text-verified-teal">✔ Matched</span></div>
-                  <div className="flex justify-between"><span>TypeScript</span><span className="text-verified-teal">✔ Matched</span></div>
-                  <div className="flex justify-between"><span>GraphQL</span><span className="text-flag-coral">✖ Gap</span></div>
-                  <div className="flex justify-between"><span>Docker</span><span className="text-verified-teal">✔ Matched</span></div>
-                </div>
-              </GlassCard>
-            </CursorReveal>
-            <p className="text-xs text-paper/30 text-center mt-3">Move your cursor over the card</p>
+            <GlassCard className="text-left">
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-5xl font-mono font-semibold text-signal-amber">94%</p>
+                <span className="text-sm text-verified-teal font-mono">✔ Match</span>
+              </div>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between"><span>React</span><span className="text-verified-teal">✔ Matched</span></div>
+                <div className="flex justify-between"><span>TypeScript</span><span className="text-verified-teal">✔ Matched</span></div>
+                <div className="flex justify-between"><span>GraphQL</span><span className="text-flag-coral">✖ Gap</span></div>
+                <div className="flex justify-between"><span>Docker</span><span className="text-verified-teal">✔ Matched</span></div>
+              </div>
+            </GlassCard>
           </div>
         </div>
       </section>
 
-      {/* Features */}
       <section id="features" className="py-24 px-4 max-w-5xl mx-auto">
         <div className="text-center mb-16">
           <p className="text-signal-amber font-mono text-sm mb-2">FEATURES</p>
@@ -92,7 +76,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Pipeline */}
       <section id="how-it-works" className="py-24 px-4 max-w-4xl mx-auto">
         <div className="text-center mb-16">
           <p className="text-signal-amber font-mono text-sm mb-2">PIPELINE</p>
@@ -118,7 +101,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Product */}
       <section id="product" className="py-24 px-4 max-w-5xl mx-auto">
         <div className="text-center">
           <p className="text-signal-amber font-mono text-sm mb-2">PRODUCT</p>
@@ -147,7 +129,6 @@ export default function LandingPage() {
         </GlassCard>
       </section>
 
-      {/* Testimonials */}
       <section className="py-24 px-4 max-w-5xl mx-auto">
         <div className="text-center mb-16">
           <p className="text-signal-amber font-mono text-sm mb-2">TRUSTED</p>
@@ -169,7 +150,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* CTA */}
       <section className="pb-32 pt-8 px-4 max-w-3xl mx-auto text-center">
         <GlassCard glow className="py-16">
           <h2 className="font-display text-3xl md:text-4xl text-paper mb-4">
