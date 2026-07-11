@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
+import rateLimit from "express-rate-limit";
 import { z } from "zod";
 import { prisma } from "../index";
 import { generateToken } from "../utils/jwt";
@@ -9,6 +10,14 @@ import { sendEmail } from "../services/email";
 import { createClient } from "@supabase/supabase-js";
 
 const router = Router();
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: { error: "Too many attempts. Try again in 15 minutes." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SECRET_KEY;
@@ -27,7 +36,7 @@ const loginSchema = z.object({
   password: z.string(),
 });
 
-router.post("/register", async (req: Request, res: Response) => {
+router.post("/register", authLimiter, async (req: Request, res: Response) => {
   try {
     const data = registerSchema.parse(req.body);
 
@@ -68,7 +77,7 @@ router.post("/register", async (req: Request, res: Response) => {
   }
 });
 
-router.post("/login", async (req: Request, res: Response) => {
+router.post("/login", authLimiter, async (req: Request, res: Response) => {
   try {
     const data = loginSchema.parse(req.body);
     const user = await prisma.user.findUnique({ where: { email: data.email } });
@@ -104,7 +113,7 @@ const resetPasswordSchema = z.object({
   password: z.string().min(6),
 });
 
-router.post("/forgot-password", async (req: Request, res: Response) => {
+router.post("/forgot-password", authLimiter, async (req: Request, res: Response) => {
   try {
     const { email } = forgotPasswordSchema.parse(req.body);
     const user = await prisma.user.findUnique({ where: { email } });
