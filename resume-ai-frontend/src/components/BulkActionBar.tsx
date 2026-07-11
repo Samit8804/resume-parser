@@ -24,7 +24,7 @@ export function BulkActionBar({ selectedIds, selectedData, jobId, onDeselectAll,
   const handleStatusChange = async (status: string) => {
     setChangingStatus(true)
     try {
-      await Promise.all(selectedIds.map((cid) => candidatesApi.updateStatus(cid, status, jobId)))
+      await Promise.all(selectedIds.map((cid) => candidatesApi.updateStatus(cid, status)))
       onRefresh()
     } catch (e) {
       console.error(e)
