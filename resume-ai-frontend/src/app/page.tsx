@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic"
 
-const LandingShell = dynamic(() => import("@/components/LandingShell"), { ssr: false })
+const LandingShell = dynamic(() => import("@/components/LandingShell"))
 
 export default function LandingPage() {
   const jsonLd = {
