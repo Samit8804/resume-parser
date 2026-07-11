@@ -130,7 +130,7 @@ router.post("/templates", async (req: Request, res: Response) => {
 
 router.put("/templates/:id", async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = req.params.id as string;
     const { name, subject, body, category } = req.body;
     const template = await prisma.emailTemplate.update({
       where: { id },
@@ -144,7 +144,7 @@ router.put("/templates/:id", async (req: Request, res: Response) => {
 
 router.delete("/templates/:id", async (req: Request, res: Response) => {
   try {
-    await prisma.emailTemplate.delete({ where: { id: req.params.id } });
+    await prisma.emailTemplate.delete({ where: { id: req.params.id as string } });
     res.json({ success: true });
   } catch (err: any) {
     res.status(500).json({ error: err.message });

@@ -44,13 +44,13 @@ const applySchema = z.object({
 
 router.get("/jobs/:slug", async (req: Request, res: Response) => {
   try {
-    const { slug } = req.params;
+    const slug = req.params.slug as string;
     const job = await prisma.job.findFirst({
       where: { slug, status: "ACTIVE" },
       include: { skills: true, company: true },
     });
     if (!job) return res.status(404).json({ error: "Job not found" });
-    const { creatorId, candidates, ...safe } = job;
+    const { creatorId, ...safe } = job;
     res.json(safe);
   } catch (err: any) {
     res.status(500).json({ error: err.message });
@@ -79,7 +79,7 @@ router.get("/jobs", async (_req: Request, res: Response) => {
 
 router.post("/jobs/:slug/apply", upload.single("resume"), async (req: Request, res: Response) => {
   try {
-    const { slug } = req.params;
+    const slug = req.params.slug as string;
     const data = applySchema.parse(req.body);
 
     const job = await prisma.job.findFirst({
