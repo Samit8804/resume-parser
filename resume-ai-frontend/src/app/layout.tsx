@@ -32,11 +32,13 @@ export const metadata: Metadata = {
     url: "https://resume-parser-tau-ten.vercel.app",
     siteName: "ResumeRank AI",
     type: "website",
+    images: [{ url: "https://resume-parser-tau-ten.vercel.app/opengraph-image", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
     title: "ResumeRank AI — Explainable AI Hiring Platform",
     description: "See the reasoning. Not just the ranking.",
+    images: ["https://resume-parser-tau-ten.vercel.app/opengraph-image"],
   },
 }
 
