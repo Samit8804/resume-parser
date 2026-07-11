@@ -1,8 +1,10 @@
 import Link from "next/link"
+import dynamic from "next/dynamic"
 import GlassCard from "@/components/GlassCard"
 import NavBar from "@/components/NavBar"
-import JitterHeadline from "@/components/JitterHeadline"
-import CursorReveal from "@/components/CursorReveal"
+
+const JitterHeadline = dynamic(() => import("@/components/JitterHeadline"))
+const CursorReveal = dynamic(() => import("@/components/CursorReveal"))
 
 export default function LandingPage() {
   const jsonLd = {
